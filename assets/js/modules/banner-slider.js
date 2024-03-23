@@ -98,13 +98,13 @@ function onMouseMove(event) {
 
 function onMouseUp(event) {
     const slide = event.currentTarget
-    if(state.movimentPosition > 150) {
+    const movementPositionQtd =  event.type.includes('touch') ? 50 : 150
+    if(state.movimentPosition > movementPositionQtd) {
         backwardSlide()
-    } else if (state.movimentPosition < -150) {
+    } else if (state.movimentPosition < -movementPositionQtd) {
         forwardSlide()
     } else {
-        const calc = getCenterPosition(state.currentSlideIndex)
-        translateSlide(calc)
+        setVisibleSlide(state.currentSlideIndex)
     }
     slide.removeEventListener('mousemove', onMouseMove)
 }
@@ -112,6 +112,28 @@ function onMouseUp(event) {
 function onMouseLeave(event) {
     const slide = event.currentTarget
     slide.removeEventListener('mousemove', onMouseMove)
+}
+
+function onTouchStart(event, index){
+    const slide = event.currentTarget
+    slide.addEventListener('touchmove',onTouchMove)
+    event.clientX = event.touches[0].clientX
+    onMouseDown(event,index)
+}
+
+function onTouchMove(event) {
+    event.clientX = event.touches[0].clientX
+    onMouseMove(event)
+}
+
+function onTouchEnd(event) {
+    const slide = event.currentTarget
+    slide.removeEventListener('touchmove',onTouchMove)
+    onMouseUp(event)
+}
+
+function onResizeWindow() {
+    setVisibleSlide(state.currentSlideIndex)
 }
 
 function setListeners() {
@@ -129,6 +151,17 @@ function setListeners() {
         btnControls[index].addEventListener('click', function(event) {
             onControlButtonCLick(event,index)
         })
+        slide.addEventListener('touchstart', function(event){
+            onTouchStart(event,index)
+        })
+        slide.addEventListener('touchend',onTouchEnd)
+    })
+    let resizeTimeout;
+    window.addEventListener('resize', function(event) {
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(function() {
+            onResizeWindow()
+        }, 1000)
     })
 }
 
