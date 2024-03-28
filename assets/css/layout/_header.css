@@ -6,6 +6,18 @@
     width: 100%;
 }
 
+.header .logo {
+    margin-left: 3.8rem;
+    padding-top: 1.6rem;
+}
+
 .header__navigation {
     width: 100%;
+}
+
+@media screen and (max-width:1024px){
+    .header .logo {
+        margin-left: 2.2rem;
+        padding-top: 2.0rem;
+    }
 }
