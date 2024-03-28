@@ -6,6 +6,7 @@ import MovieCarouselItem from '../components/movie-carousel-item.js'
 import bannerSliderModule  from '../modules/banner-slider.js'
 import collectionModule  from '../modules/collections.js'
 import headerModule from '../modules/header.js'
+import categoriesModule from '../modules/categories.js'
 
 const Home = (data) => {
     const userProfilesElement = document.querySelector('[data-usermenu="user-profiles"]')
@@ -36,6 +37,7 @@ const Home = (data) => {
     headerModule().init()
     bannerSliderModule().init()
     collectionModule().init()
+    categoriesModule().init()
 
 }   
 
