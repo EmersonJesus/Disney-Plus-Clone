@@ -38,10 +38,30 @@ const  animateTransition = (active) => {
     }
 }
 
+const activeCurrentItems = () => {
+    const {carouselItems, state} = collectionData[currentCollectionIndex]
+    carouselItems.forEach((item, itemIndex) => {
+        item.classList.remove('active')
+        const firstItemIndex = state.currentSlideIndex * itemsPerSlide
+        if(itemIndex >= firstItemIndex && itemIndex < firstItemIndex  +  itemsPerSlide){
+            item.classList.add('active')
+        }
+    })
+}
+
+const setArrowButtonsDisplay = () => {
+    const {btnNext, btnPrevious, state} = collectionData[currentCollectionIndex]
+    btnPrevious.style.display = state.currentSlideIndex === 0 ? 'none' : 'block'
+    btnNext.style.display = state.currentSlideIndex === getLastSlideIndex() ? 'none' : 'block'
+}
+
+
 const setVisibleSlide = (slideIndex) => {
     const {state} = collectionData[currentCollectionIndex]
     state.currentSlideIndex = slideIndex
     const centerPosition = getCenterPosition(slideIndex)
+    activeCurrentItems()
+    setArrowButtonsDisplay()
     animateTransition(true)
     translateSlide(centerPosition)
 }
@@ -87,10 +107,11 @@ const onMouseUp = (event) => {
     if(state.movement > 150) {
         backwardSlide()
     } else if(state.movement < -150) {
-    forwardSlide()
+        forwardSlide()
     } else {
         setVisibleSlide(state.currentSlideIndex)
     }
+    state.movement= 0
     const item = event.currentTarget
     item.removeEventListener('mousemove', onMouseMove)
 }
@@ -164,7 +185,7 @@ const setListeners = (collectionIndex) => {
     })
     btnPrevious.addEventListener('click', () => {
         currentCollectionIndex = collectionIndex
-        backwardSlide
+        backwardSlide()
     })
     carouselItems.forEach((item, itemIndex) => {
         const link = item.querySelector('.movie-carousel__link')

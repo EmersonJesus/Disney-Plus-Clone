@@ -7,7 +7,7 @@ const imgTitles = document.querySelectorAll('[data-banner="img-title"]')
 
 const state = {
     mouseDownPosition: 0,
-    movimentPosition: 0,
+    movementPosition: 0,
     lastTranslatePosition: 0,
     currentSliderPosition: 0,
     currentSlideIndex: 0
@@ -32,6 +32,15 @@ function activeImageTitle(index) {
     })
     const imgTitle = imgTitles[index]
     imgTitle.classList.add('active')
+}
+
+function activeCurrentSlides() {
+    sliderItems.forEach((slide, slideIndex) => {
+        slide.classList.remove('active')
+        if(slideIndex === state.currentSlideIndex){
+            slide.classList.add('active')
+        }
+    })
 }
 
 function getCenterPosition(index) {
@@ -65,9 +74,16 @@ function animateTransition(active) {
     }
 }
 
+function setArrowButtonsDisplay() {
+    btnPrevious.style.display = state.currentSlideIndex === 0 ? 'none' : 'block'
+    btnNext.style.display = state.currentSlideIndex === (sliderItems.length-1) ? 'none' : 'block'
+}
+
 function setVisibleSlide(index) {
     state.currentSlideIndex = index
     const position = getCenterPosition(index)
+    activeCurrentSlides()
+    setArrowButtonsDisplay()
     activeControlButton(index)
     activeImageTitle(index)
     animateTransition(true)
@@ -92,20 +108,21 @@ function onMouseDown(event, index) {
 }
 
 function onMouseMove(event) {
-    state.movimentPosition = event.clientX - state.mouseDownPosition
+    state.movementPosition = event.clientX - state.mouseDownPosition
     translateSlide(event.clientX - state.currentSliderPosition)
 }
 
 function onMouseUp(event) {
     const slide = event.currentTarget
     const movementPositionQtd =  event.type.includes('touch') ? 50 : 150
-    if(state.movimentPosition > movementPositionQtd) {
+    if(state.movementPosition > movementPositionQtd) {
         backwardSlide()
-    } else if (state.movimentPosition < -movementPositionQtd) {
+    } else if (state.movementPosition < -movementPositionQtd) {
         forwardSlide()
     } else {
         setVisibleSlide(state.currentSlideIndex)
     }
+    state.movementPosition = 0
     slide.removeEventListener('mousemove', onMouseMove)
 }
 
@@ -166,7 +183,7 @@ function setListeners() {
 }
 
 function init() {
-    setVisibleSlide(1)
+    setVisibleSlide(0)
     setListeners()
 }
 
