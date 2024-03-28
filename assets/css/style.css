@@ -6,7 +6,7 @@
 @import url('./components/_user-profile.css');
 @import url('./components/_arrow-slider.css');
 @import url('./components/_controls-slider.css');
-@import url('./components/__collection.css');
+@import url('./components/_collection.css');
 @import url(./layout/_header.css);
 @import url(./layout/_nav-menu.css);
 @import url('./layout/_user-menu.css');
